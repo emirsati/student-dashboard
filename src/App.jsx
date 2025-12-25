@@ -17,12 +17,16 @@ function App() {
     setStudents((prev) => [...prev, newStudent]);
   };
 
+  const deleteStudent = (id) => {
+    setStudents((prev) => prev.filter((student) => student.id !== id));
+  };
+
   return (
     <div className="app">
       <h1 className="header">Student Dashboard</h1>
       <StudentForm onAdd={addStudent} students={students} />
       <StudentControls />
-      <StudentList students={students} />
+      <StudentList students={students} onDelete={deleteStudent} />
     </div>
   );
 }
