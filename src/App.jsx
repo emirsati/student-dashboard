@@ -12,6 +12,9 @@ const initialStudents = [
 
 function App() {
   const [students, setStudents] = useState(initialStudents);
+  const [filter, setFilter] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('high');
 
   const addStudent = (newStudent) => {
     setStudents((prev) => [...prev, newStudent]);
@@ -21,12 +24,44 @@ function App() {
     setStudents((prev) => prev.filter((student) => student.id !== id));
   };
 
+  const visibleStudents = students
+    .filter((s) => {
+      if (filter === 'pass') return s.grade >= 60; 
+      if (filter === 'fail') return s.grade < 60;
+      return true;
+    })
+    .filter((s) => {
+      if (!searchTerm) return true;
+      return s.name.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .sort((a, b) => {
+      if (sortOrder === 'high') {
+        return b.grade - a.grade; 
+      } else {
+        return a.grade - b.grade; 
+      }
+    });
+
   return (
     <div className="app">
       <h1 className="header">Student Dashboard</h1>
+      
       <StudentForm onAdd={addStudent} students={students} />
-      <StudentControls />
-      <StudentList students={students} onDelete={deleteStudent} />
+      
+      <StudentControls 
+        filter={filter} 
+        setFilter={setFilter}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+      />
+      
+      <StudentList 
+        students={visibleStudents} 
+        onDelete={deleteStudent}
+        searchTerm={searchTerm} 
+      />
     </div>
   );
 }
