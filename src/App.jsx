@@ -13,10 +13,14 @@ const initialStudents = [
 function App() {
   const [students, setStudents] = useState(initialStudents);
 
+  const addStudent = (newStudent) => {
+    setStudents((prev) => [...prev, newStudent]);
+  };
+
   return (
     <div className="app">
       <h1 className="header">Student Dashboard</h1>
-      <StudentForm />
+      <StudentForm onAdd={addStudent} students={students} />
       <StudentControls />
       <StudentList students={students} />
     </div>
